@@ -17,4 +17,4 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 ### Don't forget to: 
-create .env.developement.local (use .env.example as an example)
+create .env.development.local (use .env.example as an example)
