@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
 import { IsEnum, IsInt, Min, IsDate, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
+import { Challenge } from "./challenge.entity";
 
 export enum MatchStatus {
   PENDING = "pending",
@@ -21,7 +22,7 @@ export class Match extends TimeStampEntity {
   @IsDate()
   start_time: Date;
 
-  
+
   @Column({ type: "datetime", nullable: true })
   @IsOptional()
   @IsDate()
@@ -55,4 +56,8 @@ export class Match extends TimeStampEntity {
   @IsInt()
   @Min(0)
   score_team2: number;
+
+  @ManyToOne(()=>Challenge, (challenge)=> challenge.matches)
+  challenge: Challenge;
+
 }

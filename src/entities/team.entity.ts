@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
 import { IsString, Length } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
+import { Challenge } from "./challenge.entity";
 
 @Entity({ name: "teams" })
 export class Team extends TimeStampEntity{
@@ -11,4 +12,7 @@ export class Team extends TimeStampEntity{
   @IsString()
   @Length(1, 50)
   team_name: string;
+
+  @ManyToOne(()=> Challenge,(challenge) => challenge.teams )
+  challenge: Challenge;
 }
