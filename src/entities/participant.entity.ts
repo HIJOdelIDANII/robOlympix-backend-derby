@@ -1,4 +1,11 @@
-import { Entity, PrimaryColumn, Column } from "typeorm";
+import {
+  Entity,
+  PrimaryColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import {
   IsEnum,
   IsNotEmpty,
@@ -7,6 +14,7 @@ import {
   Length,
 } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
+import { Team } from "./team.entity";
 
 export enum ParticipantStatus {
   CAPTAIN = "captain",
@@ -14,8 +22,8 @@ export enum ParticipantStatus {
 }
 
 @Entity({ name: "participants" })
-export class Participant extends TimeStampEntity{
-  @PrimaryColumn()
+export class Participant extends TimeStampEntity {
+  @PrimaryGeneratedColumn()
   user_id: number;
 
   @Column({
@@ -41,4 +49,10 @@ export class Participant extends TimeStampEntity{
   @IsString()
   @IsNotEmpty()
   family_name: string;
+
+  // Many participants belong to one team 
+  //when a Team is deleted, the database will automatically delete all Participant records that reference that team.
+  @ManyToOne(() => Team, (team) => team.participants, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: "team_id" })
+  team: Team;
 }

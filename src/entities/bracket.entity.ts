@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
 import { IsEnum } from "class-validator";
 import { Challenge } from "./challenge.entity";
+import { Match } from "./match.entity";
 
 // Example numeric enum for bracket positions
 export enum BracketPosition {
@@ -25,4 +26,8 @@ export class Bracket {
 
   @ManyToOne(()=>Challenge, (challenge) => challenge.brackets)
   challenge: Challenge;
+
+  @OneToMany(() => Match, match => match.bracket)
+  matches: Match[];
+  
 }

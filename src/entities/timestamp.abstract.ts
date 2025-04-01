@@ -6,9 +6,6 @@ import {
 } from "typeorm";
 
 export abstract class TimeStampEntity extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @CreateDateColumn({
     type: "timestamp",
     name: "created_at",

@@ -1,7 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
 import { IsEnum, IsInt, Min, IsDate, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
 import { Challenge } from "./challenge.entity";
+import { Team } from "./team.entity";
+import { Bracket } from "./bracket.entity";
 
 export enum MatchStatus {
   PENDING = "pending",
@@ -22,12 +31,10 @@ export class Match extends TimeStampEntity {
   @IsDate()
   start_time: Date;
 
-
   @Column({ type: "datetime", nullable: true })
   @IsOptional()
   @IsDate()
   end_time?: Date;
-
 
   @Column({
     type: "enum",
@@ -37,7 +44,6 @@ export class Match extends TimeStampEntity {
   @IsEnum(MatchStatus)
   status: MatchStatus;
 
-
   @Column({
     type: "enum",
     enum: RoundPosition,
@@ -45,19 +51,30 @@ export class Match extends TimeStampEntity {
   @IsEnum(RoundPosition)
   round_position: RoundPosition;
 
-
   @Column({ type: "int", default: 0 })
   @IsInt()
   @Min(0)
   score_team1: number;
-
 
   @Column({ type: "int", default: 0 })
   @IsInt()
   @Min(0)
   score_team2: number;
 
-  @ManyToOne(()=>Challenge, (challenge)=> challenge.matches)
+  @ManyToOne(() => Challenge, (challenge) => challenge.matches)
   challenge: Challenge;
+  
+  @ManyToOne(() => Bracket, bracket => bracket.matches)
+  @JoinColumn({ name: 'bracket_id' })
+  bracket: Bracket;
 
+  // Reference to team playing as team1
+  @ManyToOne(() => Team, (team) => team.team1Matches)
+  @JoinColumn({ name: "team1_id" })
+  team1: Team;
+
+  // Reference to team playing as team2
+  @ManyToOne(() => Team, (team) => team.team2Matches)
+  @JoinColumn({ name: "team2_id" })
+  team2: Team;
 }
