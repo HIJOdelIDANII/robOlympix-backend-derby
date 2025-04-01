@@ -63,18 +63,29 @@ export class Match extends TimeStampEntity {
 
   @ManyToOne(() => Challenge, (challenge) => challenge.matches)
   challenge: Challenge;
-  
-  @ManyToOne(() => Bracket, bracket => bracket.matches)
-  @JoinColumn({ name: 'bracket_id' })
+
+  @ManyToOne(() => Bracket, (bracket) => bracket.matches)
+  @JoinColumn({ name: "bracket_id" })
   bracket: Bracket;
 
   // Reference to team playing as team1
-  @ManyToOne(() => Team, (team) => team.team1Matches)
+  @ManyToOne(() => Team, (team) => team.team1Matches, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
   @JoinColumn({ name: "team1_id" })
   team1: Team;
 
   // Reference to team playing as team2
-  @ManyToOne(() => Team, (team) => team.team2Matches)
+  @ManyToOne(() => Team, (team) => team.team2Matches, {
+    nullable: true,
+    onDelete: "SET NULL",
+  })
   @JoinColumn({ name: "team2_id" })
   team2: Team;
+
+  /*
+    haja mouhema !!
+    onDelete: "SET NULL" :this way, if a team is deleted, the corresponding foreign key in the match record is automatically set to null, leaving the match intact.
+  */
 }
