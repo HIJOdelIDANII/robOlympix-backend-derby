@@ -83,7 +83,6 @@ export class Match extends TimeStampEntity {
   })
   @JoinColumn({ name: "team2_id" })
   team2: Team;
-
   /*
     haja mouhema !!
     onDelete: "SET NULL" :this way, if a team is deleted, the corresponding foreign key in the match record is automatically set to null, leaving the match intact.
