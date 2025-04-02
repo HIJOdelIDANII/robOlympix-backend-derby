@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+} from "typeorm";
 import { IsEnum } from "class-validator";
 import { Challenge } from "./challenge.entity";
 import { Match } from "./match.entity";
@@ -24,10 +30,9 @@ export class Bracket {
   @IsEnum(BracketPosition)
   bracket_position: BracketPosition;
 
-  @ManyToOne(()=>Challenge, (challenge) => challenge.brackets)
+  @ManyToOne(() => Challenge, (challenge) => challenge.brackets)
   challenge: Challenge;
 
-  @OneToMany(() => Match, match => match.bracket)
+  @OneToMany(() => Match, (match) => match.bracket)
   matches: Match[];
-  
 }
