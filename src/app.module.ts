@@ -8,6 +8,7 @@ import { ChallengeModule } from './challenge/challenge.module';
 import { MatchModule } from './match/match.module';
 import { ParticipantModule } from './participant/participant.module';
 import { TeamModule } from './team/team.module';
+import { PowerupModule } from './powerup/powerup.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { TeamModule } from './team/team.module';
     MatchModule,
     ParticipantModule,
     TeamModule,
+    PowerupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

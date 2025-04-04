@@ -2,7 +2,6 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { IsNotEmpty, IsString, IsJSON, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
 import { Match } from "./match.entity";
-import { Bracket } from "./bracket.entity";
 import { Team } from "./team.entity";
 
 @Entity({ name: "challenges" })
@@ -22,9 +21,6 @@ export class Challenge extends TimeStampEntity{
 
   @OneToMany(()=>Match, (match)=> match.challenge)
   matches: Match[];
-
-  @OneToMany(()=>Bracket, (bracket)=> bracket.challenge)
-  brackets: Bracket[];
 
   @OneToMany(()=>Team, (team)=> team.challenge)
   teams: Team[];

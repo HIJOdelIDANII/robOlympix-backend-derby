@@ -5,12 +5,14 @@ import {
   OneToMany,
   ManyToOne,
   JoinColumn,
+  BeforeUpdate,
 } from "typeorm";
 import { IsEnum, IsInt, Min, IsDate, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
 import { Challenge } from "./challenge.entity";
 import { Team } from "./team.entity";
-import { Bracket } from "./bracket.entity";
+import { Violation } from "./violation.entity";
+import { MatchPowerUp } from "./match-powerup.entity";
 
 export enum MatchStatus {
   PENDING = "pending",
@@ -30,6 +32,11 @@ export class Match extends TimeStampEntity {
   @Column({ type: "datetime" })
   @IsDate()
   start_time: Date;
+
+  @Column({ type: "datetime" })
+  @IsDate()
+  tend_time: Date;
+  // this the theoretical ending time.
 
   @Column({ type: "datetime", nullable: true })
   @IsOptional()
@@ -64,10 +71,6 @@ export class Match extends TimeStampEntity {
   @ManyToOne(() => Challenge, (challenge) => challenge.matches)
   challenge: Challenge;
 
-  @ManyToOne(() => Bracket, (bracket) => bracket.matches)
-  @JoinColumn({ name: "bracket_id" })
-  bracket: Bracket;
-
   // Reference to team playing as team1
   @ManyToOne(() => Team, (team) => team.team1Matches, {
     nullable: true,
@@ -87,4 +90,19 @@ export class Match extends TimeStampEntity {
     haja mouhema !!
     onDelete: "SET NULL" :this way, if a team is deleted, the corresponding foreign key in the match record is automatically set to null, leaving the match intact.
   */
+
+  @OneToMany(() => MatchPowerUp, (mpu) => mpu.match)
+  matchPowerUps: MatchPowerUp[];
+
+  @OneToMany(() => Violation, (violation) => violation.match)
+  violations: Violation[];
+
+  // Lifecycle hook to automatically set end_time when the status is FINISHED
+  @BeforeUpdate()
+  setEndTime() {
+    // If the status is FINISHED and the end_time is not already set
+    if (this.status === MatchStatus.FINISHED && !this.end_time) {
+      this.end_time = new Date(); 
+    }
+  }
 }
