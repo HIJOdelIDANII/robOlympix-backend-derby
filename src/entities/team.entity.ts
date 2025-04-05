@@ -16,7 +16,7 @@ export class Team extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   team_id: number;
 
-  @Column({ type: "varchar", length: 50 })
+  @Column({ type: "varchar", length: 50, unique: true })
   @IsString()
   @Length(1, 50)
   team_name: string;

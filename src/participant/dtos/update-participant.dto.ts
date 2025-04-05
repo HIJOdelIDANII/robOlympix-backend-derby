@@ -9,6 +9,11 @@ export class UpdateParticipantDto {
 
   @IsOptional()
   @IsString()
+  @Length(5, 60)
+  email?: string;
+
+  @IsOptional()
+  @IsString()
   name?: string;
 
   @IsOptional()

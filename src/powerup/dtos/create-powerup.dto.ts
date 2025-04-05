@@ -3,7 +3,7 @@ import { Description } from "src/entities/powerup.entity";
 
 export class CreatePowerUpDto {
   @IsString()
-  @Length(1, 50)
+  @Length(1, 15)
   name: string;
 
   @IsString()

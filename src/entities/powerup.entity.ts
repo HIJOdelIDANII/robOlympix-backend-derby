@@ -18,7 +18,7 @@ export class PowerUp extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 20 }) // red, yellow, blue, etc.
+  @Column({ type: "varchar", length: 15 , unique: true  }) // red, yellow, blue, etc.
   color: string;
 
   @Column({ type: "enum", enum: Description })
