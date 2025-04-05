@@ -9,7 +9,6 @@ import {
 } from "typeorm";
 import { IsEnum, IsInt, Min, IsDate, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
-import { Challenge } from "./challenge.entity";
 import { Team } from "./team.entity";
 import { Violation } from "./violation.entity";
 import { MatchPowerUp } from "./match-powerup.entity";
@@ -83,9 +82,6 @@ export class Match extends TimeStampEntity {
   score_team2: number;
 
   //relations:
-
-  @ManyToOne(() => Challenge, (challenge) => challenge.matches)
-  challenge: Challenge;
 
   // Reference to team playing as team1
   @ManyToOne(() => Team, (team) => team.team1Matches, {
