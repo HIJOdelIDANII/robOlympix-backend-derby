@@ -17,17 +17,31 @@ import { MatchPowerUp } from "./match-powerup.entity";
 export enum MatchStatus {
   PENDING = "pending",
   RUNNING = "running",
-  PAUSED = "paused",
   FINISHED = "finished",
 }
 export enum RoundPosition {
   FIRST_GAME = 1,
   SECOND_GAME = 2,
 }
+
+export enum KnockoutStage {
+  RoundOf16 = "Round of 16",
+  QuarterFinals = "Quarter Finals",
+  SemiFinals = "Semi Finals",
+  Finals = "Finals",
+}
 @Entity({ name: "matches" })
 export class Match extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   match_id: number;
+
+  @Column()
+  @Column({
+    type: "enum",
+    enum: KnockoutStage,
+  })
+  @IsEnum(KnockoutStage)
+  knockout_stage: KnockoutStage;
 
   @Column({ type: "datetime" })
   @IsDate()
@@ -68,6 +82,8 @@ export class Match extends TimeStampEntity {
   @Min(0)
   score_team2: number;
 
+  //relations:
+
   @ManyToOne(() => Challenge, (challenge) => challenge.matches)
   challenge: Challenge;
 
@@ -102,7 +118,7 @@ export class Match extends TimeStampEntity {
   setEndTime() {
     // If the status is FINISHED and the end_time is not already set
     if (this.status === MatchStatus.FINISHED && !this.end_time) {
-      this.end_time = new Date(); 
+      this.end_time = new Date();
     }
   }
 }
