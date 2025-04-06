@@ -3,12 +3,10 @@ import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { BracketModule } from './bracket/bracket.module';
-import { ChallengeModule } from './challenge/challenge.module';
-import { MatchModule } from './match/match.module';
-import { ParticipantModule } from './participant/participant.module';
-import { TeamModule } from './team/team.module';
-import { PowerupModule } from './powerup/powerup.module';
+import { MatchModule } from "./match/match.module";
+import { ParticipantModule } from "./participant/participant.module";
+import { TeamModule } from "./team/team.module";
+import { PowerupModule } from "./powerup/powerup.module";
 
 @Module({
   imports: [
@@ -27,10 +25,9 @@ import { PowerupModule } from './powerup/powerup.module';
         password: configService.get<string>("DB_PASSWORD"),
         database: configService.get<string>("DB_NAME"),
         synchronize: true,
+        autoLoadEntities: true,
       }),
     }),
-    BracketModule,
-    ChallengeModule,
     MatchModule,
     ParticipantModule,
     TeamModule,
