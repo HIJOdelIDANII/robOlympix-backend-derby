@@ -27,7 +27,6 @@ export class Participant extends TimeStampEntity {
   user_id: number;
 
   @Column({ type: "varchar", length: 60, unique: true })
-  @IsString()
   @IsNotEmpty()
   @Length(5, 60)
   email: string;
