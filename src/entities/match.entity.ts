@@ -24,24 +24,10 @@ export enum RoundPosition {
   SECOND_GAME = 2,
 }
 
-export enum KnockoutStage {
-  RoundOf16 = "Round of 16",
-  QuarterFinals = "Quarter Finals",
-  SemiFinals = "Semi Finals",
-  Finals = "Finals",
-}
-
 @Entity({ name: "matches" })
 export class Match extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   match_id: number;
-
-  @Column({
-    type: "enum",
-    enum: KnockoutStage,
-  })
-  @IsEnum(KnockoutStage)
-  knockout_stage: KnockoutStage;
 
   @Column({ type: "datetime" })
   @IsDate()
@@ -49,7 +35,7 @@ export class Match extends TimeStampEntity {
 
   @Column({ type: "datetime" })
   @IsDate()
-  tend_time: Date; // The theoretical ending time.
+  theoreticalEndTime: Date; // The theoretical ending time.
 
   @Column({ type: "datetime", nullable: true })
   @IsOptional()

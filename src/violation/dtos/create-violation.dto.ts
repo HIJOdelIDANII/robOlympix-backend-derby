@@ -1,15 +1,24 @@
-import { IsEnum, IsInt, IsOptional } from "class-validator";
-import { ViolationType } from "../../entities/violation.entity";
+import { IsInt, Min, IsOptional, IsEnum } from 'class-validator';
+import { MatchStatus } from '../../entities/match.entity';
 
-export class CreateViolationDto {
-  @IsEnum(ViolationType)
-  violationType: ViolationType;
+export class CreateTieDto {
+  @IsInt()
+  team1_id: number;
 
   @IsInt()
-  matchId: number;
+  team2_id: number;
 
-  // Optional, if the violation is associated with a specific team
   @IsOptional()
   @IsInt()
-  teamId?: number;
+  @Min(0)
+  cumulativeScoreTeam1?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  cumulativeScoreTeam2?: number;
+
+  @IsOptional()
+  @IsEnum(MatchStatus)
+  status?: MatchStatus;
 }

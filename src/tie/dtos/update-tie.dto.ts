@@ -1,7 +1,12 @@
-import { IsInt, Min, IsOptional, IsEnum } from 'class-validator';
+import { IsEnum, IsInt, Min, IsOptional } from 'class-validator';
+import { KnockoutStage } from '../../entities/tie.entity';
 import { MatchStatus } from '../../entities/match.entity';
 
 export class UpdateTieDto {
+  @IsOptional()
+  @IsEnum(KnockoutStage)
+  knockout_stage?: KnockoutStage;
+
   @IsOptional()
   @IsInt()
   team1_id?: number;

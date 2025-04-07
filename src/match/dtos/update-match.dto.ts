@@ -1,25 +1,17 @@
-import { IsEnum, IsDate, IsInt, Min, IsOptional } from "class-validator";
-import {
-  MatchStatus,
-  RoundPosition,
-  KnockoutStage,
-} from "../../entities/match.entity";
+import { IsEnum, IsDateString, IsInt, Min, IsOptional } from "class-validator";
+import { MatchStatus, RoundPosition } from "../../entities/match.entity";
 
 export class UpdateMatchDto {
   @IsOptional()
-  @IsEnum(KnockoutStage)
-  knockout_stage?: KnockoutStage;
-
-  @IsOptional()
-  @IsDate()
+  @IsDateString()
   start_time?: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   tend_time?: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   end_time?: Date;
 
   @IsOptional()
@@ -40,11 +32,8 @@ export class UpdateMatchDto {
   @Min(0)
   score_team2?: number;
 
+  // Allow updating the associated tie if needed
   @IsOptional()
   @IsInt()
-  team1_id?: number;
-
-  @IsOptional()
-  @IsInt()
-  team2_id?: number;
+  tie_id?: number;
 }

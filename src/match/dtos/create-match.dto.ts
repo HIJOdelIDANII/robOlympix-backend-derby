@@ -1,29 +1,22 @@
-import { IsEnum, IsDate, IsInt, Min } from "class-validator";
-import {
-  MatchStatus,
-  RoundPosition,
-  KnockoutStage,
-} from "../../entities/match.entity";
+import { IsEnum, IsDateString, IsInt, Min, IsOptional } from "class-validator";
+import { MatchStatus, RoundPosition } from "../../entities/match.entity";
 
 export class CreateMatchDto {
-  @IsEnum(KnockoutStage)
-  knockout_stage: KnockoutStage;
-
-  @IsDate()
+  @IsDateString()
   start_time: Date;
 
-  @IsDate()
+  @IsDateString()
   tend_time: Date;
-
-  @IsEnum(MatchStatus)
-  status?: MatchStatus;
 
   @IsEnum(RoundPosition)
   round_position: RoundPosition;
 
+  // Optionally link this match to a tie
   @IsInt()
-  team1_id: number;
+  tie_id: number;
 
-  @IsInt()
-  team2_id: number;
+  // Optional status override; defaults to "pending" if omitted
+  @IsOptional()
+  @IsEnum(MatchStatus)
+  status?: MatchStatus;
 }
