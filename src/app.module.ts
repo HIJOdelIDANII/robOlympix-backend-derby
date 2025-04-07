@@ -7,12 +7,18 @@ import { MatchModule } from "./match/match.module";
 import { ParticipantModule } from "./participant/participant.module";
 import { TeamModule } from "./team/team.module";
 import { PowerupModule } from "./powerup/powerup.module";
+import { Team } from "./entities/team.entity";
+import { Participant } from "./entities/participant.entity";
+import { Match } from "./entities/match.entity";
+import { PowerUp } from "./entities/powerup.entity";
+import { Violation } from "./entities/violation.entity";
+import { MatchPowerUp } from "./entities/match-powerup.entity";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: "env.development.local",
+      envFilePath: ".env.development.local",
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -24,8 +30,8 @@ import { PowerupModule } from "./powerup/powerup.module";
         username: configService.get<string>("DB_USERNAME"),
         password: configService.get<string>("DB_PASSWORD"),
         database: configService.get<string>("DB_NAME"),
+        entities: [Team, Participant, Match, PowerUp, Violation, MatchPowerUp],
         synchronize: true,
-        autoLoadEntities: true,
       }),
     }),
     MatchModule,

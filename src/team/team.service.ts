@@ -37,6 +37,15 @@ export class TeamService {
     }
     return team;
   }
+  async findByName(name: string): Promise<Team> {
+    const team = await this.teamRepository.findOne({
+      where: { team_name: name },
+    });
+    if (!team) {
+      throw new NotFoundException(`Team with name "${name}" not found`);
+    }
+    return team;
+  }
 
   async update(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
     // optionally check for team name uniqueness if it's being updated
@@ -51,10 +60,40 @@ export class TeamService {
     await this.teamRepository.update(id, updateTeamDto);
     return this.findOne(id);
   }
+  async updateByName(
+    name: string,
+    updateTeamDto: UpdateTeamDto
+  ): Promise<Team> {
+    // Find team by name first
+    const team = await this.teamRepository.findOne({
+      where: { team_name: name },
+    });
+    if (!team) {
+      throw new NotFoundException(`Team with name "${name}" not found.`);
+    }
+    // If team_name is updated, check for conflicts
+    if (updateTeamDto.team_name && updateTeamDto.team_name !== name) {
+      const teamWithSameName = await this.teamRepository.findOne({
+        where: { team_name: updateTeamDto.team_name },
+      });
+      if (teamWithSameName && teamWithSameName.team_id !== team.team_id) {
+        throw new ConflictException("A team with that name already exists.");
+      }
+    }
+    await this.teamRepository.update(team.team_id, updateTeamDto);
+    return this.findOne(team.team_id);
+  }
+
   async remove(id: number): Promise<void> {
     const result = await this.teamRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`Team with id ${id} not found.`);
+    }
+  }
+  async removeByName(name: string): Promise<void> {
+    const result = await this.teamRepository.delete({ team_name: name });
+    if (result.affected === 0) {
+      throw new NotFoundException(`Team with name "${name}" not found.`);
     }
   }
 }

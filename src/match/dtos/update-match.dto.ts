@@ -1,5 +1,9 @@
-import { IsEnum, IsDate, IsInt, Min, IsOptional } from 'class-validator';
-import { MatchStatus, RoundPosition, KnockoutStage } from '../../entities/match.entity';
+import { IsEnum, IsDate, IsInt, Min, IsOptional } from "class-validator";
+import {
+  MatchStatus,
+  RoundPosition,
+  KnockoutStage,
+} from "../../entities/match.entity";
 
 export class UpdateMatchDto {
   @IsOptional()
@@ -35,10 +39,6 @@ export class UpdateMatchDto {
   @IsInt()
   @Min(0)
   score_team2?: number;
-
-  @IsOptional()
-  @IsInt()
-  challengeId?: number;
 
   @IsOptional()
   @IsInt()

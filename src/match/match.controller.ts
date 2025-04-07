@@ -17,7 +17,7 @@ import { Match } from "../entities/match.entity";
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-  @Post()
+  @Post("create")
   async create(@Body() createMatchDto: CreateMatchDto): Promise<Match> {
     return this.matchService.create(createMatchDto);
   }
@@ -32,7 +32,7 @@ export class MatchController {
     return this.matchService.findOne(id);
   }
 
-  @Put(":id")
+  @Put("update/:id")
   async update(
     @Param("id", ParseIntPipe) id: number,
     @Body() updateMatchDto: UpdateMatchDto
@@ -40,7 +40,7 @@ export class MatchController {
     return this.matchService.update(id, updateMatchDto);
   }
 
-  @Delete(":id")
+  @Delete("delete/:id")
   async remove(@Param("id", ParseIntPipe) id: number): Promise<void> {
     return this.matchService.remove(id);
   }

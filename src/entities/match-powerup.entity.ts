@@ -10,7 +10,7 @@ import { Match } from "./match.entity";
 import { PowerUp } from "./powerup.entity";
 import { Team } from "./team.entity";
 
-@Entity("match_power_ups")
+@Entity({ name: "match_power_ups" })
 export class MatchPowerUp extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

@@ -17,7 +17,7 @@ import { Team } from "../entities/team.entity";
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}
 
-  @Post()
+  @Post("create")
   async create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
     return this.teamService.create(createTeamDto);
   }
@@ -27,6 +27,10 @@ export class TeamController {
     return this.teamService.findAll();
   }
 
+  @Get("name/:name")
+  async findByName(@Param("name") name: string): Promise<Team> {
+    return this.teamService.findByName(name);
+  }
   @Get(":id")
   async findOne(@Param("id") id: number): Promise<Team> {
     return this.teamService.findOne(id);
@@ -39,9 +43,20 @@ export class TeamController {
   ): Promise<Team> {
     return this.teamService.update(id, updateTeamDto);
   }
+  @Put("name/:name")
+  async updateByName(
+    @Param("name") name: string,
+    @Body() updateTeamDto: UpdateTeamDto
+  ): Promise<Team> {
+    return this.teamService.updateByName(name, updateTeamDto);
+  }
 
   @Delete(":id")
   async remove(@Param("id") id: number): Promise<void> {
     return this.teamService.remove(id);
+  }
+  @Delete("delete/name/:name")
+  async removeByName(@Param("name") name: string): Promise<void> {
+    return this.teamService.removeByName(name);
   }
 }

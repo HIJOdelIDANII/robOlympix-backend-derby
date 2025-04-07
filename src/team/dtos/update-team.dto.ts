@@ -5,7 +5,4 @@ export class UpdateTeamDto {
   @IsString()
   @Length(1, 50)
   team_name?: string;
-
-  @IsOptional()
-  challengeId?: number;
 }

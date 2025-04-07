@@ -18,7 +18,7 @@ import { Participant } from "../entities/participant.entity";
 export class ParticipantController {
   constructor(private readonly participantService: ParticipantService) {}
 
-  @Post()
+  @Post("create")
   async create(
     @Body() createParticipantDto: CreateParticipantDto
   ): Promise<Participant> {
