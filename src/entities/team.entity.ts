@@ -2,13 +2,12 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  ManyToOne,
   OneToMany,
 } from "typeorm";
 import { IsString, Length } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
-import { Match } from "./match.entity";
 import { Participant } from "./participant.entity";
+import { Tie } from "./tie.entity";
 
 @Entity({ name: "teams" })
 export class Team extends TimeStampEntity {
@@ -23,11 +22,11 @@ export class Team extends TimeStampEntity {
   @OneToMany(() => Participant, (participant) => participant.team)
   participants: Participant[];
 
-  // Matches where this team is assigned as team1
-  @OneToMany(() => Match, (match) => match.team1)
-  team1Matches: Match[];
+  // Ties where this team is assigned as team1 (home side)
+  @OneToMany(() => Tie, (tie) => tie.team1)
+  homeTies: Tie[];
 
-  // Matches where this team is assigned as team2
-  @OneToMany(() => Match, (match) => match.team2)
-  team2Matches: Match[];
+  // Ties where this team is assigned as team2 (away side)
+  @OneToMany(() => Tie, (tie) => tie.team2)
+  awayTies: Tie[];
 }

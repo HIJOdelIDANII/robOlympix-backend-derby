@@ -1,4 +1,0 @@
-match_power_ups Table
-id	match_id	team_id	powerup_id	activated_at	expires_at	is_active
-1	10	3	1	2025-04-02 14:30:00	2025-04-02 14:30:30	true
-2	10	2	2	2025-04-02 14:31:10	2025-04-02 14:31:40	false

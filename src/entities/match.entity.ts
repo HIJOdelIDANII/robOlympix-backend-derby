@@ -2,22 +2,23 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   Column,
-  OneToMany,
   ManyToOne,
+  OneToMany,
   JoinColumn,
   BeforeUpdate,
 } from "typeorm";
 import { IsEnum, IsInt, Min, IsDate, IsOptional } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
-import { Team } from "./team.entity";
 import { Violation } from "./violation.entity";
 import { MatchPowerUp } from "./match-powerup.entity";
+import { Tie } from "./tie.entity";
 
 export enum MatchStatus {
   PENDING = "pending",
   RUNNING = "running",
   FINISHED = "finished",
 }
+
 export enum RoundPosition {
   FIRST_GAME = 1,
   SECOND_GAME = 2,
@@ -29,12 +30,12 @@ export enum KnockoutStage {
   SemiFinals = "Semi Finals",
   Finals = "Finals",
 }
+
 @Entity({ name: "matches" })
 export class Match extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   match_id: number;
 
-  @Column()
   @Column({
     type: "enum",
     enum: KnockoutStage,
@@ -48,8 +49,7 @@ export class Match extends TimeStampEntity {
 
   @Column({ type: "datetime" })
   @IsDate()
-  tend_time: Date;
-  // this the theoretical ending time.
+  tend_time: Date; // The theoretical ending time.
 
   @Column({ type: "datetime", nullable: true })
   @IsOptional()
@@ -81,27 +81,13 @@ export class Match extends TimeStampEntity {
   @Min(0)
   score_team2: number;
 
-  //relations:
-
-  // Reference to team playing as team1
-  @ManyToOne(() => Team, (team) => team.team1Matches, {
+  // Relationship to the Tie entity (which stores team1 and team2)
+  @ManyToOne(() => Tie, (tie) => tie.matches, {
     nullable: true,
     onDelete: "SET NULL",
   })
-  @JoinColumn({ name: "team1_id" })
-  team1: Team;
-
-  // Reference to team playing as team2
-  @ManyToOne(() => Team, (team) => team.team2Matches, {
-    nullable: true,
-    onDelete: "SET NULL",
-  })
-  @JoinColumn({ name: "team2_id" })
-  team2: Team;
-  /*
-    haja mouhema !!
-    onDelete: "SET NULL" :this way, if a team is deleted, the corresponding foreign key in the match record is automatically set to null, leaving the match intact.
-  */
+  @JoinColumn({ name: "tie_id" })
+  tie: Tie;
 
   @OneToMany(() => MatchPowerUp, (mpu) => mpu.match)
   matchPowerUps: MatchPowerUp[];
@@ -109,10 +95,9 @@ export class Match extends TimeStampEntity {
   @OneToMany(() => Violation, (violation) => violation.match)
   violations: Violation[];
 
-  // Lifecycle hook to automatically set end_time when the status is FINISHED
+  // Lifecycle hook to automatically set end_time when status becomes FINISHED
   @BeforeUpdate()
   setEndTime() {
-    // If the status is FINISHED and the end_time is not already set
     if (this.status === MatchStatus.FINISHED && !this.end_time) {
       this.end_time = new Date();
     }
