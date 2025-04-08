@@ -43,7 +43,7 @@ export class TeamController {
   ): Promise<Team> {
     return this.teamService.update(id, updateTeamDto);
   }
-  @Put("name/:name")
+  @Put(":name")
   async updateByName(
     @Param("name") name: string,
     @Body() updateTeamDto: UpdateTeamDto

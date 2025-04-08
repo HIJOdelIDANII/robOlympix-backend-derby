@@ -35,7 +35,7 @@ export class Match extends TimeStampEntity {
 
   @Column({ type: "datetime" })
   @IsDate()
-  theoreticalEndTime: Date; // The theoretical ending time.
+  theoretical_end_time: Date;
 
   @Column({ type: "datetime", nullable: true })
   @IsOptional()

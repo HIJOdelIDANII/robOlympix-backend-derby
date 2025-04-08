@@ -1,5 +1,5 @@
 import { IsString, Length, IsOptional, IsEnum } from "class-validator";
-import { Description } from "src/entities/powerup.entity";
+import { Effect } from "src/entities/powerup.entity";
 
 export class UpdatePowerUpDto {
   @IsOptional()
@@ -12,6 +12,6 @@ export class UpdatePowerUpDto {
   color?: string;
 
   @IsOptional()
-  @IsEnum(Description)
-  description?: Description;
+  @IsEnum(Effect)
+  effect?: Effect;
 }

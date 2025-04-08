@@ -6,7 +6,7 @@ export class CreateMatchDto {
   start_time: Date;
 
   @IsDateString()
-  tend_time: Date;
+  theoretical_end_time: Date;
 
   @IsEnum(RoundPosition)
   round_position: RoundPosition;

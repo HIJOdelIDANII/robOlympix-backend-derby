@@ -13,6 +13,8 @@ import { Match } from "./entities/match.entity";
 import { PowerUp } from "./entities/powerup.entity";
 import { Violation } from "./entities/violation.entity";
 import { MatchPowerUp } from "./entities/match-powerup.entity";
+import { KnockoutModule } from "./knockout/knockout.module";
+import { Tie } from "./entities/tie.entity";
 
 @Module({
   imports: [
@@ -30,7 +32,15 @@ import { MatchPowerUp } from "./entities/match-powerup.entity";
         username: configService.get<string>("DB_USERNAME"),
         password: configService.get<string>("DB_PASSWORD"),
         database: configService.get<string>("DB_NAME"),
-        entities: [Team, Participant, Match, PowerUp, Violation, MatchPowerUp],
+        entities: [
+          Team,
+          Participant,
+          Match,
+          PowerUp,
+          Violation,
+          MatchPowerUp,
+          Tie,
+        ],
         synchronize: true,
       }),
     }),
@@ -38,6 +48,7 @@ import { MatchPowerUp } from "./entities/match-powerup.entity";
     ParticipantModule,
     TeamModule,
     PowerupModule,
+    KnockoutModule,
   ],
   controllers: [AppController],
   providers: [AppService],

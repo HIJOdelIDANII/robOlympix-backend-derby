@@ -1,5 +1,5 @@
 import { IsEnum, IsString, Length } from "class-validator";
-import { Description } from "src/entities/powerup.entity";
+import { Effect } from "src/entities/powerup.entity";
 
 export class CreatePowerUpDto {
   @IsString()
@@ -9,6 +9,6 @@ export class CreatePowerUpDto {
   @IsString()
   color: string;
 
-  @IsEnum(Description)
-  description: Description;
+  @IsEnum(Effect)
+  effect: Effect;
 }
