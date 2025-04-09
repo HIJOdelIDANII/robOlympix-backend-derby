@@ -19,6 +19,12 @@ export enum KnockoutStage {
   Finals = "Finals",
 }
 
+export enum TieStatus {
+  PENDING = "pending",
+  RUNNING = "running",
+  FINISHED = "finished",
+}
+
 @Entity({ name: "ties" })
 export class Tie extends TimeStampEntity {
   @PrimaryGeneratedColumn()
@@ -59,9 +65,9 @@ export class Tie extends TimeStampEntity {
   // Overall status of the tie (using the same MatchStatus enum)
   @Column({
     type: "enum",
-    enum: MatchStatus,
-    default: MatchStatus.PENDING,
+    enum: TieStatus,
+    default: TieStatus.PENDING,
   })
-  @IsEnum(MatchStatus)
-  status: MatchStatus;
+  @IsEnum(TieStatus)
+  status: TieStatus;
 }

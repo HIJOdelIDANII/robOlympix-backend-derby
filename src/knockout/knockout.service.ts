@@ -7,11 +7,10 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Team } from "../entities/team.entity";
-import { Tie, KnockoutStage } from "../entities/tie.entity";
+import { Tie, KnockoutStage, TieStatus } from "../entities/tie.entity";
 import { Match, MatchStatus, RoundPosition } from "../entities/match.entity";
-import { CreateTieDto } from "../tie/dtos/create-tie.dto";
 import { CreateMatchDto } from "../match/dtos/create-match.dto";
-import { create } from "domain";
+
 
 @Injectable()
 export class KnockoutService {
@@ -59,7 +58,7 @@ export class KnockoutService {
         team2: team2,
         cumulativeScoreTeam1: 0,
         cumulativeScoreTeam2: 0,
-        status: MatchStatus.PENDING,
+        status: TieStatus.PENDING,
       });
       const createdTie = await this.tieRepository.save(tie);
 
@@ -156,7 +155,7 @@ export class KnockoutService {
         team2: team2,
         cumulativeScoreTeam1: 0,
         cumulativeScoreTeam2: 0,
-        status: MatchStatus.PENDING,
+        status: TieStatus.PENDING,
       };
       const newTie = this.tieRepository.create(tieData);
       const createdTie = await this.tieRepository.save(newTie);
