@@ -9,8 +9,6 @@ import { Repository } from "typeorm";
 import { Team } from "../entities/team.entity";
 import { Tie, KnockoutStage, TieStatus } from "../entities/tie.entity";
 import { Match, MatchStatus, RoundPosition } from "../entities/match.entity";
-import { CreateMatchDto } from "../match/dtos/create-match.dto";
-
 
 @Injectable()
 export class KnockoutService {
@@ -29,7 +27,7 @@ export class KnockoutService {
     const teams = await this.teamRepository.find({
       select: ["team_id", "team_name"],
     });
-    if (teams.length < 16) {
+    if (teams.length < 16) { //just for verif
       throw new NotFoundException("Not enough teams for a Round of 16");
     }
 
@@ -40,9 +38,9 @@ export class KnockoutService {
       [shuffledTeams[i], shuffledTeams[j]] = [
         shuffledTeams[j],
         shuffledTeams[i],
-      ];
+      ]; // it's just o(n) random picking
     }
-    //taking the first 16 ofc
+    //taking the first 16 ofc (just for verification)
     const selectedTeams = shuffledTeams.slice(0, 16);
 
     const ties: Tie[] = [];
@@ -62,19 +60,19 @@ export class KnockoutService {
       });
       const createdTie = await this.tieRepository.save(tie);
 
-      const firstMatchDto: CreateMatchDto = {
+      const firstMatchDto= {
         start_time: new Date(),
         theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000), //2 minutes later
         round_position: RoundPosition.FIRST_GAME,
-        tie_id: createdTie.tie_id,
+        tie: createdTie,
         status: MatchStatus.PENDING,
       };
 
-      const secondMatchDto: CreateMatchDto = {
+      const secondMatchDto= {
         start_time: new Date(),
         theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000),
         round_position: RoundPosition.SECOND_GAME,
-        tie_id: createdTie.tie_id,
+        tie: createdTie,
         status: MatchStatus.PENDING,
       };
 

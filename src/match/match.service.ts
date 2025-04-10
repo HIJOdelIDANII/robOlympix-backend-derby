@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Match, MatchStatus } from "../entities/match.entity";
@@ -6,6 +6,7 @@ import { Tie } from "../entities/tie.entity";
 
 @Injectable()
 export class MatchService {
+  private readonly logger = new Logger(MatchService.name);
   constructor(
     @InjectRepository(Match)
     private readonly matchRepository: Repository<Match>,
@@ -13,22 +14,12 @@ export class MatchService {
     private readonly tieRepository: Repository<Tie>
   ) {}
 
-  // Other methods (create, findOne, findAll, etc.)
-
-  /**
-   * Updates the score of a match, then automatically updates
-   * the cumulative scores on the associated tie.
-   *
-   * @param matchId The id of the match to update.
-   * @param scoreTeam1 The new score for team 1.
-   * @param scoreTeam2 The new score for team 2.
-   * @returns The updated Match.
-   */
   async updateMatchScore(
     matchId: number,
     scoreTeam1: number,
     scoreTeam2: number
   ): Promise<Match> {
+    
     // Load match (including its tie relation)
     const match = await this.matchRepository.findOne({
       where: { match_id: matchId },
@@ -38,6 +29,8 @@ export class MatchService {
       throw new NotFoundException(`Match with id ${matchId} not found`);
     }
 
+    this.logger.log(`Found match ${matchId} with tie_id: ${match.tie?.tie_id}`);
+
     // Update the match's scores
     match.score_team1 = scoreTeam1;
     match.score_team2 = scoreTeam2;
@@ -45,25 +38,55 @@ export class MatchService {
 
     // If the match belongs to a tie, update cumulative scores
     if (updatedMatch.tie) {
-      // Fetch all matches linked to this tie
-      const tieMatches = await this.matchRepository.find({
-        where: { tie: updatedMatch.tie },
+      this.logger.log(`Updating cumulative scores for tie ${updatedMatch.tie.tie_id}`);
+      
+      // First, get the fresh tie data
+      const tie = await this.tieRepository.findOne({
+        where: { tie_id: updatedMatch.tie.tie_id },
+        relations: ["matches"]
       });
+
+      if (!tie) {
+        this.logger.error(`Tie ${updatedMatch.tie.tie_id} not found`);
+        return updatedMatch;
+      }
+
+      // Fetch all matches linked to this tie using the tie_id
+      const tieMatches = await this.matchRepository.find({
+        where: { tie: { tie_id: tie.tie_id } },
+      });
+
+      this.logger.log(`Found ${tieMatches.length} matches for tie ${tie.tie_id}`);
+      this.logger.log('Match scores:', tieMatches.map(m => ({ 
+        match_id: m.match_id, 
+        score_team1: m.score_team1, 
+        score_team2: m.score_team2 
+      })));
 
       // Calculate cumulative scores
       const cumulativeScoreTeam1 = tieMatches.reduce(
-        (sum, m) => sum + m.score_team1,
+        (sum, m) => sum + Number(m.score_team1),
         0
       );
       const cumulativeScoreTeam2 = tieMatches.reduce(
-        (sum, m) => sum + m.score_team2,
+        (sum, m) => sum + Number(m.score_team2),
         0
       );
 
-      // Update the Tie entity
-      updatedMatch.tie.cumulativeScoreTeam1 = cumulativeScoreTeam1;
-      updatedMatch.tie.cumulativeScoreTeam2 = cumulativeScoreTeam2;
-      await this.tieRepository.save(updatedMatch.tie);
+      this.logger.log(`Calculated cumulative scores - Team1: ${cumulativeScoreTeam1}, Team2: ${cumulativeScoreTeam2}`);
+
+      // Update the tie entity directly
+      await this.tieRepository
+        .createQueryBuilder()
+        .update(Tie)
+        .set({
+          cumulativeScoreTeam1: cumulativeScoreTeam1,
+          cumulativeScoreTeam2: cumulativeScoreTeam2
+        })
+        .where("tie_id = :tieId", { tieId: tie.tie_id })
+        .execute();
+
+      this.logger.log(`Updated tie ${tie.tie_id} with new cumulative scores`);
     }
 
     return updatedMatch;
