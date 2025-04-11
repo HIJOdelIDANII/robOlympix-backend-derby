@@ -54,23 +54,17 @@ export class KnockoutService {
         knockout_stage: KnockoutStage.RoundOf16,
         team1: team1,
         team2: team2,
-        cumulativeScoreTeam1: 0,
-        cumulativeScoreTeam2: 0,
-        status: TieStatus.PENDING,
+        status: TieStatus.PENDING
       });
       const createdTie = await this.tieRepository.save(tie);
 
       const firstMatchDto= {
-        start_time: new Date(),
-        theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000), //2 minutes later
         round_position: RoundPosition.FIRST_GAME,
         tie: createdTie,
         status: MatchStatus.PENDING,
       };
 
       const secondMatchDto= {
-        start_time: new Date(),
-        theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000),
         round_position: RoundPosition.SECOND_GAME,
         tie: createdTie,
         status: MatchStatus.PENDING,
@@ -98,7 +92,7 @@ export class KnockoutService {
       case KnockoutStage.SemiFinals:
         return KnockoutStage.Finals;
       default:
-        throw new Error(`No subsequent stage defined for ${currentStage}`);
+        throw new NotFoundException(`No subsequent stage defined for ${currentStage}`);
     }
   }
 
@@ -120,7 +114,7 @@ export class KnockoutService {
       } else if (tie.cumulativeScoreTeam2 > tie.cumulativeScoreTeam1) {
         return tie.team2;
       } else {
-        // In case of a tie, choose team1 as a default (or throw an error for manual intervention)
+      
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
@@ -151,31 +145,21 @@ export class KnockoutService {
         knockout_stage: nextStage,
         team1: team1,
         team2: team2,
-        cumulativeScoreTeam1: 0,
-        cumulativeScoreTeam2: 0,
-        status: TieStatus.PENDING,
+        status: TieStatus.PENDING
       };
       const newTie = this.tieRepository.create(tieData);
       const createdTie = await this.tieRepository.save(newTie);
 
       // Create two match legs for this tie using your CreateMatchDto structure
       const matchData1 = {
-        start_time: new Date(),
-        theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000), // example: 2 minutes later
         round_position: RoundPosition.FIRST_GAME,
         tie: createdTie,
         status: MatchStatus.PENDING,
-        score_team1: 0,
-        score_team2: 0,
       };
       const matchData2 = {
-        start_time: new Date(),
-        theoretical_end_time: new Date(Date.now() + 2 * 60 * 1000),
         round_position: RoundPosition.SECOND_GAME,
         tie: createdTie,
-        status: MatchStatus.PENDING,
-        score_team1: 0,
-        score_team2: 0,
+        status: MatchStatus.PENDING
       };
 
       const firstMatch = this.matchRepository.create(matchData1);
