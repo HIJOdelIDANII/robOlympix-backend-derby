@@ -29,13 +29,13 @@ export class Match extends TimeStampEntity {
   @PrimaryGeneratedColumn()
   match_id: number;
 
-  @Column({ type: "datetime" })
+  @Column({ type: "datetime", nullable: true })
   @IsDate()
-  start_time: Date;
+  start_time: Date | null;
 
-  @Column({ type: "datetime" })
+  @Column({ type: "datetime", nullable: true })
   @IsDate()
-  theoretical_end_time: Date;
+  theoretical_end_time: Date | null;
 
   @Column({ type: "datetime", nullable: true })
   @IsOptional()

@@ -5,12 +5,6 @@ import { MatchService } from './match.service';
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
 
-  // Other endpoints (create, findAll, findOne, etc.)
-
-  /**
-   * PATCH /matches/:id/score
-   * Expects a JSON body with "score_team1" and "score_team2".
-   */
   @Patch(':id/score')
   async updateMatchScore(
     @Param('id') id: string,

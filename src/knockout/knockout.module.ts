@@ -9,6 +9,6 @@ import { Tie } from 'src/entities/tie.entity';
 @Module({
   providers: [KnockoutService],
   controllers: [KnockoutController],
-  imports: [TypeOrmModule.forFeature([Team, Match, Tie])]
+  imports: [TypeOrmModule.forFeature([Team, Match, Tie])],
 })
 export class KnockoutModule {}
