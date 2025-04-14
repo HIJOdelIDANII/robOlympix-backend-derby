@@ -20,7 +20,7 @@ export class MatchController {
     );
     return {
       message: "Match score updated successfully",
-      match: instanceToPlain(updatedMatch),
+      match: updatedMatch
     };
   }
   @Patch(":id/status")

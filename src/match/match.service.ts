@@ -10,6 +10,7 @@ import { Repository } from "typeorm";
 import { Match } from "../entities/match.entity";
 import { Tie } from "../entities/tie.entity";
 import { MatchStatus } from "../entities/match.entity";
+import { instanceToPlain } from "class-transformer";
 
 @Injectable()
 export class MatchService {
@@ -25,7 +26,7 @@ export class MatchService {
     matchId: number,
     scoreTeam1: number,
     scoreTeam2: number
-  ): Promise<Match> {
+  ) {
     // Load match (including its tie relation)
     const match = await this.matchRepository.findOne({
       where: { match_id: matchId },
@@ -121,7 +122,12 @@ export class MatchService {
       this.logger.log(`Updated tie ${tie.tie_id} with new cumulative scores`);
     }
 
-    return updatedMatch;
+    return instanceToPlain(
+      await this.matchRepository.findOne({
+        where: { match_id: matchId },
+        relations: ["tie"]
+      })
+    );
   }
 
   async updateMatchStatus(id: number, newStatus: MatchStatus) {
@@ -150,11 +156,11 @@ export class MatchService {
 
   async getMatchStatus(matchId): Promise<MatchStatus> {
     const match = await this.matchRepository.findOne({
-      where: { match_id: matchId }
+      where: { match_id: matchId },
     });
     if (!match) {
       throw new NotFoundException(`Match with id ${matchId} not found`);
     }
-    return (match.status);
+    return match.status;
   }
 }

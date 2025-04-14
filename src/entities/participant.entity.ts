@@ -1,6 +1,5 @@
 import {
   Entity,
-  PrimaryColumn,
   Column,
   ManyToOne,
   JoinColumn,
@@ -18,7 +17,7 @@ import { Team } from "./team.entity";
 
 export enum ParticipantStatus {
   CAPTAIN = "captain",
-  MEMBER = "member"
+  MEMBER = "member",
 }
 
 @Entity({ name: "participants" })
