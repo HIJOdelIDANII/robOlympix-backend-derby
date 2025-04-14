@@ -1,6 +1,7 @@
 import { Controller, Patch, Param, Body, Get } from "@nestjs/common";
 import { MatchService } from "./match.service";
 import { MatchStatus } from "src/entities/match.entity";
+import { instanceToPlain } from "class-transformer";
 
 @Controller("matches")
 export class MatchController {
@@ -19,7 +20,7 @@ export class MatchController {
     );
     return {
       message: "Match score updated successfully",
-      match: updatedMatch,
+      match: instanceToPlain(updatedMatch),
     };
   }
   @Patch(":id/status")

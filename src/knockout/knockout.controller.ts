@@ -1,6 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { KnockoutService } from "./knockout.service";
 import { KnockoutStage } from "src/entities/tie.entity";
+import { instanceToPlain } from "class-transformer";
 
 @Controller("knockout")
 export class KnockoutController {
@@ -11,7 +12,7 @@ export class KnockoutController {
     const ties = await this.knockoutService.createRoundOf16();
     return {
       message: "Round of 16 created successfully",
-      ties,
+      ties: instanceToPlain(ties),
     };
   }
   @Post("create-next-round")
@@ -19,7 +20,7 @@ export class KnockoutController {
     const newTies = await this.knockoutService.createNextRound(currentStage);
     return {
       message: `Next knockout round (${this.knockoutService.getNextStage(currentStage)}) created successfully.`,
-      ties: newTies,
+      ties: instanceToPlain(newTies),
     };
   }
 }
