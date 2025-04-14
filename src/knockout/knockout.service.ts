@@ -24,10 +24,21 @@ export class KnockoutService {
   ) {}
 
   async createRoundOf16(): Promise<Tie[]> {
+
+    const Round16TiesExists = await this.tieRepository.findOne({
+      where : {knockout_stage: KnockoutStage.RoundOf16}
+    })
+    if (Round16TiesExists != null){
+      throw new HttpException (`You are already have ties in Round of 16`,
+        HttpStatus.BAD_REQUEST
+      )
+    }
+
     const teams = await this.teamRepository.find({
       select: ["team_id", "team_name"],
     });
-    if (teams.length < 16) { //just for verif
+    if (teams.length < 16) {
+      //just for verif
       throw new NotFoundException("Not enough teams for a Round of 16");
     }
 
@@ -57,13 +68,13 @@ export class KnockoutService {
       });
       const createdTie = await this.tieRepository.save(tie);
 
-      const firstMatchDto= {
+      const firstMatchDto = {
         round_position: RoundPosition.FIRST_GAME,
         tie: createdTie,
         status: MatchStatus.PENDING,
       };
 
-      const secondMatchDto= {
+      const secondMatchDto = {
         round_position: RoundPosition.SECOND_GAME,
         tie: createdTie,
         status: MatchStatus.PENDING,
@@ -91,12 +102,29 @@ export class KnockoutService {
       case KnockoutStage.SemiFinals:
         return KnockoutStage.Finals;
       default:
-        throw new NotFoundException(`No subsequent stage defined for ${currentStage}`);
+        throw new NotFoundException(
+          `No subsequent stage defined for ${currentStage}`
+        );
     }
   }
 
   // Create the next knockout round using winners from the current stage.
   async createNextRound(currentStage: KnockoutStage): Promise<Tie[]> {
+
+    const nextStage = this.getNextStage(currentStage);
+
+    //Don't create a round if there a at least a tie with that round status
+    const NextRoundTieExists = await this.tieRepository.findOne({
+      where: {
+        knockout_stage: nextStage,
+      },
+    });
+    if (NextRoundTieExists != null){
+      throw new HttpException(`You are already have ties in ${nextStage}`,
+        HttpStatus.BAD_REQUEST
+      )
+    }
+
     // Retrieve all ties for the current stage with team relations
     const currentTies = await this.tieRepository.find({
       where: { knockout_stage: currentStage },
@@ -105,6 +133,8 @@ export class KnockoutService {
     if (!currentTies || currentTies.length === 0) {
       throw new NotFoundException(`No ties found for stage: ${currentStage}`);
     }
+    //to do implement: verify all matches of current knockout stage are finished
+
 
     // Determine winners from each tie based on cumulative scores.
     const winners: Team[] = currentTies.map((tie) => {
@@ -113,7 +143,6 @@ export class KnockoutService {
       } else if (tie.cumulativeScoreTeam2 > tie.cumulativeScoreTeam1) {
         return tie.team2;
       } else {
-      
         throw new HttpException(
           {
             status: HttpStatus.BAD_REQUEST,
@@ -130,7 +159,7 @@ export class KnockoutService {
     }
 
     // Determine the next stage
-    const nextStage = this.getNextStage(currentStage);
+    
     const newTies: Tie[] = [];
 
     // Pair the winners (assumed to be already in the desired order)
@@ -157,7 +186,7 @@ export class KnockoutService {
       const matchData2 = {
         round_position: RoundPosition.SECOND_GAME,
         tie: createdTie,
-        status: MatchStatus.PENDING
+        status: MatchStatus.PENDING,
       };
 
       const firstMatch = this.matchRepository.create(matchData1);
