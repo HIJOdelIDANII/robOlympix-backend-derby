@@ -123,4 +123,38 @@ export class MatchService {
 
     return updatedMatch;
   }
+
+  async updateMatchStatus(id: number, newStatus: MatchStatus) {
+    if (newStatus === MatchStatus.RUNNING) {
+      const startTime = new Date();
+      const theoreticalEndTime = new Date(startTime.getTime() + 2 * 60 * 1000);
+      await this.matchRepository.update(
+        { match_id: id },
+        {
+          status: newStatus,
+          start_time: startTime,
+          theoretical_end_time: theoreticalEndTime,
+        }
+      );
+    } else if (newStatus === MatchStatus.FINISHED) {
+      const endTime = new Date();
+      await this.matchRepository.update(
+        { match_id: id },
+        {
+          status: newStatus,
+          end_time: endTime,
+        }
+      );
+    }
+  }
+
+  async getMatchStatus(matchId): Promise<MatchStatus> {
+    const match = await this.matchRepository.findOne({
+      where: { match_id: matchId }
+    });
+    if (!match) {
+      throw new NotFoundException(`Match with id ${matchId} not found`);
+    }
+    return (match.status);
+  }
 }

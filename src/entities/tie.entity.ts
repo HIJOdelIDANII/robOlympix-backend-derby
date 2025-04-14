@@ -10,7 +10,6 @@ import { IsEnum, IsInt, Min } from "class-validator";
 import { TimeStampEntity } from "./timestamp.abstract";
 import { Team } from "./team.entity";
 import { Match } from "./match.entity";
-import { MatchStatus } from "./match.entity";
 
 export enum KnockoutStage {
   RoundOf16 = "Round of 16",
@@ -19,11 +18,6 @@ export enum KnockoutStage {
   Finals = "Finals",
 }
 
-export enum TieStatus {
-  PENDING = "pending",
-  RUNNING = "running",
-  FINISHED = "finished",
-}
 
 @Entity({ name: "ties" })
 export class Tie extends TimeStampEntity {
@@ -62,12 +56,4 @@ export class Tie extends TimeStampEntity {
   @Min(0)
   cumulativeScoreTeam2: number;
 
-  // Overall status of the tie (using the same MatchStatus enum)
-  @Column({
-    type: "enum",
-    enum: TieStatus,
-    default: TieStatus.PENDING,
-  })
-  @IsEnum(TieStatus)
-  status: TieStatus;
 }

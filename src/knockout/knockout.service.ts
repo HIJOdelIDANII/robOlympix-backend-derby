@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Team } from "../entities/team.entity";
-import { Tie, KnockoutStage, TieStatus } from "../entities/tie.entity";
+import { Tie, KnockoutStage } from "../entities/tie.entity";
 import { Match, MatchStatus, RoundPosition } from "../entities/match.entity";
 
 @Injectable()
@@ -54,7 +54,6 @@ export class KnockoutService {
         knockout_stage: KnockoutStage.RoundOf16,
         team1: team1,
         team2: team2,
-        status: TieStatus.PENDING
       });
       const createdTie = await this.tieRepository.save(tie);
 
@@ -145,7 +144,6 @@ export class KnockoutService {
         knockout_stage: nextStage,
         team1: team1,
         team2: team2,
-        status: TieStatus.PENDING
       };
       const newTie = this.tieRepository.create(tieData);
       const createdTie = await this.tieRepository.save(newTie);

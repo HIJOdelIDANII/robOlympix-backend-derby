@@ -1,5 +1,5 @@
 import { IsEnum, IsInt, Min, IsOptional } from "class-validator";
-import { KnockoutStage, TieStatus } from "../../entities/tie.entity";
+import { KnockoutStage } from "../../entities/tie.entity";
 
 export class CreateTieDto {
   @IsEnum(KnockoutStage)
@@ -22,8 +22,4 @@ export class CreateTieDto {
   @Min(0)
   cumulativeScoreTeam2?: number;
 
-  // Optionally, you can set an initial status (defaults to PENDING)
-  @IsOptional()
-  @IsEnum(TieStatus)
-  status?: TieStatus;
 }
