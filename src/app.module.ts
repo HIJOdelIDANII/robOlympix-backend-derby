@@ -15,6 +15,7 @@ import { Violation } from "./entities/violation.entity";
 import { MatchPowerUp } from "./entities/match-powerup.entity";
 import { KnockoutModule } from "./knockout/knockout.module";
 import { Tie } from "./entities/tie.entity";
+import { MatchPowerupModule } from './match-powerup/match-powerup.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { Tie } from "./entities/tie.entity";
     TeamModule,
     PowerupModule,
     KnockoutModule,
+    MatchPowerupModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,11 +1,11 @@
-import { IsInt, IsOptional, IsBoolean, IsDate } from "class-validator";
+import { IsInt, IsOptional, IsBoolean, IsDate, IsString } from "class-validator";
 
 export class CreateMatchPowerUpDto {
   @IsInt()
   matchId: number;
 
-  @IsInt()
-  powerupId: number;
+  @IsString()
+  powerupColor: string;
 
   @IsOptional()
   @IsInt()
