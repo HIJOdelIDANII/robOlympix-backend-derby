@@ -10,5 +10,6 @@ import { Tie } from "src/entities/tie.entity";
   providers: [MatchService],
   controllers: [MatchController],
   imports: [TypeOrmModule.forFeature([Tie, Team, Match])],
+  exports:[MatchService]
 })
 export class MatchModule {}

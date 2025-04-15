@@ -154,7 +154,7 @@ export class MatchService {
     }
   }
 
-  async getMatchStatus(matchId): Promise<MatchStatus> {
+  async getMatchStatus(matchId: number): Promise<MatchStatus> {
     const match = await this.matchRepository.findOne({
       where: { match_id: matchId },
     });
@@ -162,5 +162,15 @@ export class MatchService {
       throw new NotFoundException(`Match with id ${matchId} not found`);
     }
     return match.status;
+  }
+
+  async getMatchByStatus(status: MatchStatus){
+    const match = await this.matchRepository.find({
+      where: { status: status },
+    });
+    if (!match) {
+      throw new NotFoundException(`Match with status ${status} not found`);
+    }
+    return match;
   }
 }

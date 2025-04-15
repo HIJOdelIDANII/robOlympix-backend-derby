@@ -7,6 +7,7 @@ export class PowerupController {
     @Post()
     triggerPowerUp(@Body() payload: any) {
         console.log("PowerUp triggered from controller");
+        console.log(payload);
         this.gateway.server.emit('powerUpEvent', payload);
         return {success: true};
     }

@@ -19,11 +19,5 @@ export class PowerUpGateway
   handleDisconnect(client: Socket) {
     console.log(`Client disconnected: ${client.id}`);
   }
-
-  @SubscribeMessage('buttonPressed')
-  handleButtonPressed(client: Socket, payload: any): void{
-    console.log(`socket received button press`, payload);
-    this.server.emit('powerUpEvent',"salut");
-  }
   
 }
