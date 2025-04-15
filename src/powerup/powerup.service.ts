@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { MatchPowerUp } from "src/entities/match-powerup.entity";
 import { MatchStatus } from "src/entities/match.entity";
 import { CreateMatchPowerUpDto } from "src/match-powerup/dtos/create-match-powerup.dto";
@@ -12,7 +12,7 @@ export class PowerupService {
     private readonly matchPowerupService: MatchPowerupService
   ) {}
 
-  async savePowerUps(teamId: number, color: string) : Promise<MatchPowerUp>{
+  async savePowerUps(teamId: number, color: string): Promise<MatchPowerUp> {
     const matchesByStatus = await this.matchService.getMatchByStatus(
       MatchStatus.RUNNING
     );
@@ -20,8 +20,9 @@ export class PowerupService {
     if (matchesByStatus.length === 1) {
       match = matchesByStatus[0];
     } else {
-      throw new Error(
-        `Expected one match with status --running--, found ${matchesByStatus.length}`
+      throw new HttpException(
+        `Expected one match with status "running", found ${matchesByStatus.length}`,
+        HttpStatus.CONFLICT // 409 Conflict
       );
     }
     const currentDate = new Date();
@@ -32,7 +33,8 @@ export class PowerupService {
       activationTime: currentDate,
       isActive: true,
     };
-    const matchPowerUp = await this.matchPowerupService.createMatchPowerUp(matchPowerUpDto);
+    const matchPowerUp =
+      await this.matchPowerupService.createMatchPowerUp(matchPowerUpDto);
     return matchPowerUp;
   }
 }
