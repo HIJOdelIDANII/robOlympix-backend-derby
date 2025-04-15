@@ -19,21 +19,21 @@ export class TeamController {
 
   @Post("create")
   async create(@Body() createTeamDto: CreateTeamDto): Promise<Team> {
-    return this.teamService.create(createTeamDto);
+    return await this.teamService.create(createTeamDto);
   }
 
   @Get()
   async findAll() {
-    return this.teamService.findAll();
+    return await this.teamService.findAll();
   }
 
   @Get("name/:name")
   async findByName(@Param("name") name: string) {
-    return this.teamService.findByName(name);
+    return await this.teamService.findByName(name);
   }
   @Get(":id")
   async findOne(@Param("id") id: number){
-    return this.teamService.findOne(id);
+    return await this.teamService.findOne(id);
   }
 
   @Put(":id")
@@ -41,22 +41,22 @@ export class TeamController {
     @Param("id") id: number,
     @Body() updateTeamDto: UpdateTeamDto
   ){
-    return this.teamService.update(id, updateTeamDto);
+    return await this.teamService.update(id, updateTeamDto);
   }
   @Put(":name")
   async updateByName(
     @Param("name") name: string,
     @Body() updateTeamDto: UpdateTeamDto
   ){
-    return this.teamService.updateByName(name, updateTeamDto);
+    return await this.teamService.updateByName(name, updateTeamDto);
   }
 
   @Delete(":id")
   async remove(@Param("id") id: number){
-    return this.teamService.remove(id);
+    return await this.teamService.remove(id);
   }
   @Delete("delete/name/:name")
   async removeByName(@Param("name") name: string){
-    return this.teamService.removeByName(name);
+    return await this.teamService.removeByName(name);
   }
 }

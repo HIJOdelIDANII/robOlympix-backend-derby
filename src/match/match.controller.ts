@@ -6,6 +6,16 @@ import { instanceToPlain } from "class-transformer";
 @Controller("matches")
 export class MatchController {
   constructor(private readonly matchService: MatchService) {}
+  @Get()
+  async getAllMatches() {
+    const matches = await this.matchService.findAllMatches();
+    return instanceToPlain(matches);
+  }
+  @Get(":id")
+  async getMatchById(@Param("id") id: string) {
+    const match = await this.matchService.findMatchById(+id);
+    return instanceToPlain(match);
+  }
 
   @Patch(":id/score")
   async updateMatchScore(

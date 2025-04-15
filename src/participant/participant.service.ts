@@ -48,7 +48,7 @@ export class ParticipantService {
       team,
     });
 
-    return this.participantRepository.save(participant);
+    return await this.participantRepository.save(participant);
   }
 
   // GET all participants with their team data

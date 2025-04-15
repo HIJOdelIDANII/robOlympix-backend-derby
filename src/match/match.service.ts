@@ -22,6 +22,22 @@ export class MatchService {
     private readonly tieRepository: Repository<Tie>
   ) {}
 
+  async findAllMatches() {
+    const matches = await this.matchRepository.find({
+      relations: ["tie"],
+    });
+    return instanceToPlain(matches);
+  }
+  async findMatchById(id: number) {
+    const match = await this.matchRepository.findOne({
+      where: { match_id: id },
+      relations: ["tie"],
+    });
+    if (!match) {
+      throw new NotFoundException(`Match with id ${id} not found`);
+    }
+    return instanceToPlain(match);
+  }
   async updateMatchScore(
     matchId: number,
     scoreTeam1: number,

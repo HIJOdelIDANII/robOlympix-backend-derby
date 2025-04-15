@@ -14,7 +14,7 @@ import { instanceToPlain } from "class-transformer";
 export class TeamService {
   constructor(
     @InjectRepository(Team)
-    private teamRepository: Repository<Team>
+    private readonly teamRepository: Repository<Team>
   ) {}
   async create(createTeamDto: CreateTeamDto): Promise<Team> {
     //checks if a team with the same name already exists
@@ -25,10 +25,11 @@ export class TeamService {
       throw new ConflictException("A team with that name already exists.");
     }
     const team = this.teamRepository.create(createTeamDto);
-    return this.teamRepository.save(team);
+    return await this.teamRepository.save(team);
   }
   async findAll(){
-    return instanceToPlain(this.teamRepository.find());
+    const teams = await this.teamRepository.find();
+    return instanceToPlain(teams);
   }
 
   async findOne(id: number){
@@ -59,7 +60,7 @@ export class TeamService {
       }
     }
     await this.teamRepository.update(id, updateTeamDto);
-    return this.findOne(id);
+    return await this.findOne(id);
   }
   async updateByName(
     name: string,
@@ -82,7 +83,7 @@ export class TeamService {
       }
     }
     await this.teamRepository.update(team.team_id, updateTeamDto);
-    return this.findOne(team.team_id);
+    return await this.findOne(team.team_id);
   }
 
   async remove(id: number): Promise<void> {

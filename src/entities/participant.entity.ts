@@ -4,6 +4,7 @@ import {
   ManyToOne,
   JoinColumn,
   PrimaryGeneratedColumn,
+  BaseEntity,
 } from "typeorm";
 import {
   IsEnum,
@@ -12,7 +13,6 @@ import {
   IsString,
   Length,
 } from "class-validator";
-import { TimeStampEntity } from "./timestamp.abstract";
 import { Team } from "./team.entity";
 
 export enum ParticipantStatus {
@@ -21,7 +21,7 @@ export enum ParticipantStatus {
 }
 
 @Entity({ name: "participants" })
-export class Participant extends TimeStampEntity {
+export class Participant extends BaseEntity {
   @PrimaryGeneratedColumn()
   user_id: number;
 
