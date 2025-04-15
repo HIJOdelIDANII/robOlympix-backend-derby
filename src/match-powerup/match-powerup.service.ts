@@ -17,7 +17,7 @@ export class MatchPowerupService {
     @InjectRepository(MatchPowerUp)
     private readonly matchPowerUpRepository: Repository<MatchPowerUp>
   ) {}
-  async createMatchPower(
+  async createMatchPowerUp(
     createMatchPowerUp: CreateMatchPowerUpDto
   ): Promise<MatchPowerUp> {
     const match = await this.matchServie.findMatchById(

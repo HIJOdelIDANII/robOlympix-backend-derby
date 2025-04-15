@@ -3,11 +3,11 @@ import { PowerupService } from "./powerup.service";
 import { PowerupController } from "./powerup.controller";
 import { PowerUpGateway } from "./powerup.gateway";
 import { MatchModule } from "src/match/match.module";
-import { MatchPowerUp } from "src/entities/match-powerup.entity";
+import { MatchPowerupModule } from "src/match-powerup/match-powerup.module";
 
 @Module({
   providers: [PowerupService, PowerUpGateway],
   controllers: [PowerupController],
-  imports: [MatchModule, MatchPowerUp],
+  imports: [MatchModule, MatchPowerupModule],
 })
 export class PowerupModule {}
